@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: "Inetum REST"
+  description: "Ejemplo de servicios REST para Inetum"
+  contact: 
+    email: "javier@email.net"
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+tags:
+  - name: productos
+    description: Información de productos
+paths:
+  /productos:
+    get:
+      tags:
+        - productos
+      summary: Recibe todos los productos
+      description: Devuelve un producto
+      operationId: get
+      responses:
+        "200":
+          description: producto devuelto correctamente
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Producto"
+        "404":
+          description: Producto no encontrado
+    post:
+      tags:
+        - productos
+      summary: Añadir un nuevo producto
+      description: Añadir un nuevo producto
+      operationId: post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Producto"
+      responses:
+        "201":
+          description: Producto creado
+    
+  "/productos/{id}":
+    get:
+      tags:
+        - productos
+      summary: Busca el producto por su id
+      description: Devuelve un producto
+      operationId: getById
+      parameters:
+        - name: id
+          in: path
+          description: id del producto a buscar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: producto devuelto correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Producto"
+        "404":
+          description: Producto no encontrado
+    put:
+      tags:
+        - productos
+      summary: Modificar un producto existente
+      description: Modificar un producto existente
+      operationId: put
+      parameters:
+        - name: id
+          in: path
+          description: id del producto a modificar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Producto"
+      responses:
+        "200":
+          description: Producto creado
+    delete:
+      tags:
+        - productos
+      summary: Borra un producto
+      description: "Borra un producto"
+      operationId: delete
+      parameters:
+        - name: id
+          in: path
+          description: id del producto a borrar
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Borrado correcto
+components:
+  schemas:
+    Producto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        precio:
+          type: number
+        stock:
+          type: integer
+          format: int32
+        fechaCaducidad:
+          type: string
+          format: date-time
