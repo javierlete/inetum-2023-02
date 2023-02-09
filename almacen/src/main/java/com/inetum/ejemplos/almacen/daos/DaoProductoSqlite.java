@@ -5,11 +5,9 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 import com.inetum.ejemplos.almacen.entidades.Producto;
 
-@Repository
 public class DaoProductoSqlite implements DaoProducto {
 
 	@Autowired

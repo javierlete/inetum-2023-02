@@ -17,24 +17,25 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.inetum.ejemplos.almacen.daos.DaoProducto;
 import com.inetum.ejemplos.almacen.entidades.Producto;
+import com.inetum.ejemplos.almacen.repositorios.ProductoRepository;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/productos")
 public class ProductoRestController {
 	@Autowired
-	private DaoProducto dao;
+	private ProductoRepository repo;
 
 	@GetMapping
 	public Iterable<Producto> get() {
-		return dao.obtenerTodos();
+		return repo.findAll();
 	}
 
 	@GetMapping("{id}")
 	public Producto getPorId(@PathVariable Long id) {
-		Producto producto = dao.obtenerPorId(id);
+		Producto producto = repo.findById(id).orElse(null);
+		
 		if (producto == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No encontrado");
 		} else {
@@ -44,19 +45,19 @@ public class ProductoRestController {
 	
 	@GetMapping("buscar/por-precio")
 	public Iterable<Producto> getPorPrecio(BigDecimal inferior, BigDecimal superior) {
-		return dao.obtenerPorPrecios(inferior, superior);
+		return repo.findByPrecioBetween(inferior, superior);
 	}
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public Producto post(@RequestBody Producto producto) {
-		return dao.insertar(producto);
+		return repo.save(producto);
 	}
 
 	@PutMapping("{id}")
 	public Producto put(@PathVariable Long id, @RequestBody Producto producto) {
 		if (Objects.equals(id, producto.getId())) {
-			return dao.modificar(producto);
+			return repo.save(producto);
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El id de la URL debe coincidir con el id del producto");
 		}
@@ -65,6 +66,6 @@ public class ProductoRestController {
 	@DeleteMapping("{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
-		dao.borrar(id);
+		repo.deleteById(id);
 	}
 }
