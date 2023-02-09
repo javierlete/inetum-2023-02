@@ -4,11 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.TreeMap;
 
-import org.springframework.stereotype.Repository;
-
 import com.inetum.ejemplos.almacen.entidades.Producto;
 
-@Repository
 public class DaoProductoMemoria implements DaoProducto {
 	private TreeMap<Long, Producto> productos = new TreeMap<>();
 
