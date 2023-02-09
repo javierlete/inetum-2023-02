@@ -1,5 +1,8 @@
 package com.inetum.ejemplos.almacen.rest;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,16 +17,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.inetum.ejemplos.almacen.daos.Dao;
+import com.inetum.ejemplos.almacen.daos.DaoProducto;
 import com.inetum.ejemplos.almacen.entidades.Producto;
-import java.util.Objects;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/productos")
 public class ProductoRestController {
 	@Autowired
-	private Dao<Producto> dao;
+	private DaoProducto dao;
 
 	@GetMapping
 	public Iterable<Producto> get() {
@@ -38,6 +40,11 @@ public class ProductoRestController {
 		} else {
 			return producto;
 		}
+	}
+	
+	@GetMapping("buscar/por-precio")
+	public Iterable<Producto> getPorPrecio(BigDecimal inferior, BigDecimal superior) {
+		return dao.obtenerPorPrecios(inferior, superior);
 	}
 
 	@PostMapping
