@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.inetum.ejemplos.almacen.entidades.Producto;
 import com.inetum.ejemplos.almacen.repositorios.ProductoRepository;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -50,12 +53,20 @@ public class ProductoRestController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Producto post(@RequestBody Producto producto) {
+	public Producto post(@RequestBody @Valid Producto producto, BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se admite el producto");
+		}
+		
 		return repo.save(producto);
 	}
 
 	@PutMapping("{id}")
-	public Producto put(@PathVariable Long id, @RequestBody Producto producto) {
+	public Producto put(@PathVariable Long id, @Valid @RequestBody Producto producto, BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se admite el producto");
+		}
+		
 		if (Objects.equals(id, producto.getId())) {
 			return repo.save(producto);
 		} else {
