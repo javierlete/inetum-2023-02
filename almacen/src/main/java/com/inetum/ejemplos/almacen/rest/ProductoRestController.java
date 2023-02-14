@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.inetum.ejemplos.almacen.entidades.Producto;
-import com.inetum.ejemplos.almacen.repositorios.ProductoRepository;
+import com.inetum.ejemplos.almacen.servicios.ProductoService;
 
 import jakarta.validation.Valid;
 
@@ -28,16 +28,16 @@ import jakarta.validation.Valid;
 @RequestMapping("/productos")
 public class ProductoRestController {
 	@Autowired
-	private ProductoRepository repo;
+	private ProductoService servicio;
 
 	@GetMapping
 	public Iterable<Producto> get() {
-		return repo.findAll();
+		return servicio.obtenerListado();
 	}
 
 	@GetMapping("{id}")
 	public Producto getPorId(@PathVariable Long id) {
-		Producto producto = repo.findById(id).orElse(null);
+		Producto producto = servicio.obtenerDetalle(id);
 		
 		if (producto == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No encontrado");
@@ -48,7 +48,7 @@ public class ProductoRestController {
 	
 	@GetMapping("buscar/por-precio")
 	public Iterable<Producto> getPorPrecio(BigDecimal inferior, BigDecimal superior) {
-		return repo.findByPrecioBetween(inferior, superior);
+		return servicio.buscarPorPrecio(inferior, superior);
 	}
 
 	@PostMapping
@@ -58,7 +58,11 @@ public class ProductoRestController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se admite el producto");
 		}
 		
-		return repo.save(producto);
+		if(producto.getId() != null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se admite id en el producto para darlo de alta");
+		}
+		
+		return servicio.darDeAlta(producto);
 	}
 
 	@PutMapping("{id}")
@@ -68,7 +72,7 @@ public class ProductoRestController {
 		}
 		
 		if (Objects.equals(id, producto.getId())) {
-			return repo.save(producto);
+			return servicio.modificar(producto);
 		} else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El id de la URL debe coincidir con el id del producto");
 		}
@@ -77,6 +81,6 @@ public class ProductoRestController {
 	@DeleteMapping("{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
-		repo.deleteById(id);
+		servicio.eliminar(id);
 	}
 }

@@ -2,6 +2,8 @@ package com.inetum.ejemplos.almacen.entidades;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +18,9 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -42,7 +46,10 @@ public class Categoria {
 	
 	@Lob
 	private String descripcion;
-	
+
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	@JsonIgnore
 	@OneToMany(mappedBy = "categoria")
 	private Set<Producto> productos;
 }
