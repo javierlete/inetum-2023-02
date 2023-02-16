@@ -7,5 +7,74 @@
 </head>
 <body>
 
+	<table>
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nombre</th>
+				<th>Precio</th>
+				<th>Stock</th>
+				<th>Fecha de caducidad</th>
+				<th>Categoría</th>
+				<th>Opciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+		<tfoot>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<a href="javascript:mostrarFormulario()">Añadir</a>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+	
+	<form>
+		<fieldset>
+			<legend>Producto</legend>
+			
+			<div>
+				<label for="id">Id</label>
+				<input type="number" readonly id="id" name="id" />
+			</div>
+
+			<div>
+				<label for="nombre">Nombre</label>
+				<input type="text" id="nombre" name="nombre" />
+			</div>
+			
+			<div>
+				<label for="precio">Precio</label>
+				<input type="number" min="0" step=".01" id="precio" name="precio" />
+			</div>
+			
+			<div>
+				<label for="stock">Stock</label>
+				<input type="number" min="0" id="stock" name="stock" />
+			</div>
+
+
+			<div>
+				<label for="fechaCaducidad">Fecha de caducidad</label>
+				<input type="date" id="fechaCaducidad" name="fechaCaducidad" />
+			</div>
+			
+			<div>
+				<label for="categoria">Categoría</label>
+				<select id="categoria" name="categoria"></select>
+			</div>
+			
+			<button>Aceptar</button>
+		</fieldset>
+	</form>
+
 </body>
 </html>
