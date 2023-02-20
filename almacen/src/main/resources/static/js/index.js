@@ -1,5 +1,5 @@
-const URL = 'http://localhost:8081/productos/';
-const URLcategorias = 'http://localhost:8081/categorias/'
+const URL = 'http://app:8081/productos/';
+const URLcategorias = 'http://app:8081/categorias/'
 
 let form;
 let listado;
