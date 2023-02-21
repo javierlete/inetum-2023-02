@@ -1,9 +1,13 @@
 networks:
   red: {}
+  redinterna: {}
 
 services:
   app-cliente:
-    image: jglete/inetum-cliente
+    image: nginx:1.23
+    volumes:
+      - ./almacen/src/main/resources/static:/usr/share/nginx/html
+#jglete/inetum-cliente
     networks:
       - red
     depends_on:
@@ -11,18 +15,25 @@ services:
     ports:
       - 80:80
   app:
-    image: jglete/inetum
+    image: eclipse-temurin:17-jdk-alpine
+#jglete/inetum
+    entrypoint: java -jar /tmp/almacen-0.0.1-SNAPSHOT.jar
+    volumes:
+      - ./almacen/target:/tmp
     networks:
       - red
+      - redinterna
     depends_on:
       - app_db
     ports:
       - 8081:8081
 
   app_db:
-    image: mysql
+    image: mysql:8.0
+    volumes:
+      - ./mysql-db:/var/lib/mysql
     networks:
-      - red
+      - redinterna
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_DATABASE=inetum
