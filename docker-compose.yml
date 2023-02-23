@@ -10,8 +10,6 @@ services:
 #jglete/inetum-cliente
     networks:
       - red
-    depends_on:
-      - app
     ports:
       - 80:80
   app:
@@ -34,6 +32,16 @@ services:
       - ./mysql-db:/var/lib/mysql
     networks:
       - redinterna
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=inetum
+
+  mysql_externo:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-db:/var/lib/mysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_DATABASE=inetum

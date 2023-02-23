@@ -7,11 +7,16 @@ import org.springframework.stereotype.Service;
 
 import com.inetum.ejemplos.almacen.entidades.Categoria;
 import com.inetum.ejemplos.almacen.entidades.Producto;
+import com.inetum.ejemplos.almacen.eventos.DomainListenerPublisher;
+import com.inetum.ejemplos.almacen.eventos.ElementoSeleccionadoEvent;
 import com.inetum.ejemplos.almacen.repositorios.CategoriaRepository;
 import com.inetum.ejemplos.almacen.repositorios.ProductoRepository;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
+	@Autowired
+	private DomainListenerPublisher dlp;
+
 	@Autowired
 	private ProductoRepository repo;
 	
@@ -25,7 +30,11 @@ public class ProductoServiceImpl implements ProductoService {
 
 	@Override
 	public Producto obtenerDetalle(Long id) {
-		return repo.findById(id).orElse(null);
+		Producto producto = repo.findById(id).orElse(null);
+		
+		dlp.publish(new ElementoSeleccionadoEvent(producto));
+
+		return producto;
 	}
 
 	@Override
